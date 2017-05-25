@@ -1,3 +1,5 @@
+#ifndef _MATRIZ_H
+#define _MATRIZ_H 
 class Matriz{
 	private:
 		int matriz[10][10];
@@ -18,3 +20,4 @@ class Matriz{
 
 
 };
+#endif
