@@ -122,7 +122,7 @@ bool Tablero::recorrerMatrizCompro (int fil , int i_fils, int col , int i_cols, 
 	if (dentro){
 		do{
 			
-			posicion = getPosicion( fil, col );
+			posicion = matriz.getPosition( fil, col );
 			opuesta = comprobarFichaOpuesta(ficha, posicion );
 			fil += i_fils; 
 			col += i_cols;
@@ -212,7 +212,7 @@ bool Tablero::comprobarRectas(int fil, int col, int ficha) const{
 bool Tablero::consultarPosicion(char col, int fil) const{
 	int entero_col = transformarCharCol(col), ficha;
 	bool estado = false;
-	if ( getPosicion( col , fil ) == 0){
+	if ( matriz.getPosition( fil, entero_col ) == 0){
 		ficha = turnoActual();
 		estado = comprobarDiagonales( fil, entero_col, ficha );
 		if ( !estado )
