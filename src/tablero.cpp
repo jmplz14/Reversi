@@ -175,7 +175,7 @@ bool Tablero::comprobarRecInf(int fil , int col , int ficha) const{
 
 
 
-bool Tablero::comprobarDiagonales(int fil, int col, int ficha) const{
+bool Tablero::comprobarLineas(int fil, int col, int ficha) const{
 	bool estado = false;
 	
 	//diagonal superior hacia la derecha la fila -1 a la columna +1
@@ -192,15 +192,9 @@ bool Tablero::comprobarDiagonales(int fil, int col, int ficha) const{
 	//diagonal inferior hacia la izquierda la fila +1 a la columna -1
 	if( !estado )  
 		estado = comprobarDiaInfIzq( fil, col, ficha ); 
-	
-	return estado;
-}
-
-bool Tablero::comprobarRectas(int fil, int col, int ficha) const{
-	bool estado = false;
-	
 	// superior a la fila -1 la columna siempre igual
-	estado = comprobarRecSup( fil, col, ficha ); 
+	if(!estado)
+		estado = comprobarRecSup( fil, col, ficha ); 
 	
 	// inferior a la fila 1 la columna siempre igual
 	if( !estado )  
@@ -212,38 +206,22 @@ bool Tablero::comprobarRectas(int fil, int col, int ficha) const{
 	
 	//izquierda la fila siempre igual a la columna -1
 	if( !estado )  
-		estado = comprobarRecIzq( fil, col, ficha ); 
+		estado = comprobarRecIzq( fil, col, ficha );
 	
 	return estado;
 }
-
 
 bool Tablero::consultarPosicion(char col, int fil) const{
 	int entero_col = transformarCharCol(col), ficha;
 	bool estado = false;
 	if ( matriz.getPosition( fil, entero_col ) == 0){
 		ficha = turnoActual();
-		estado = comprobarDiagonales( fil, entero_col, ficha );
-		if ( !estado )
-			estado = comprobarRectas( fil, entero_col, ficha );
-				
+		estado = comprobarLineas( fil, entero_col, ficha );
+		
 	}
 	
 	return estado;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

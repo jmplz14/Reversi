@@ -8,8 +8,7 @@ class Tablero{
 		bool turno_J1;
 		int n_fichas, n_fichas_colocadas;
 		int transformarCharCol( char col) const;
-		bool comprobarDiagonales(int fil , int col , int ficha) const;
-		bool comprobarRectas(int fil , int col , int ficha) const;
+		bool comprobarLineas(int fil , int col , int ficha) const;
 		// a esta funcion se le pasa la fil y la columna aparte de lo valores que vamos a ir sumando
 		// estas para ir recorriendo el vector y ver si es una linea valida
 		bool recorrerMatrizCompro (int fil , int i_fils, int col , int i_cols, int ficha ) const;
