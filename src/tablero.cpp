@@ -222,6 +222,34 @@ bool Tablero::consultarPosicion(char col, int fil) const{
 	
 	return estado;
 }
+bool Tablero::posibilidadMoviminto(int jugador){
+	bool estado = false;
+	if (jugador == 1 || jugador == 2){
+		int fils = matriz.getFils(), cols = matriz.getCols();
+		for (int i = 0 ; i < fils && !estado ; i++){
+			for (int j = 0 ; j < cols && !estado ; j++){
+				estado = comprobarLineas(i , j , jugador);
+				
+										
+			}
+		}
+	}
+	
+	return estado;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
