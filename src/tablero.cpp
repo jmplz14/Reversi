@@ -112,7 +112,7 @@ bool Tablero::comprobarFichaOpuesta(int ficha, int posicion) const{
 
 bool Tablero::recorrerMatrizCompro (int fil , int i_fils, int col , int i_cols, int ficha ) const{
 	bool estado = false , dentro, opuesta;
-	int posicion;
+	int posicion, cont = 0;
 	
 	//se comprueba que la primera casilla no es ni una ficha igual ni esta vacia.
 	fil += i_fils; 
@@ -120,16 +120,25 @@ bool Tablero::recorrerMatrizCompro (int fil , int i_fils, int col , int i_cols, 
 	dentro = comprobarCoordenadas( fil, col );
 	
 	if (dentro){
-		do{
-			
-			posicion = matriz.getPosition( fil, col );
-			opuesta = comprobarFichaOpuesta(ficha, posicion );
+		posicion = matriz.getPosition( fil, col );
+		opuesta = comprobarFichaOpuesta(ficha, posicion );
+		if (opuesta){
 			fil += i_fils; 
 			col += i_cols;
 			dentro = comprobarCoordenadas( fil, col );
-			
-		}while (dentro && opuesta);
-			estado = posicion == ficha ? true : false;
+			if(dentro){	
+				do{
+
+					posicion = matriz.getPosition( fil, col );
+					opuesta = comprobarFichaOpuesta(ficha, posicion );
+					fil += i_fils; 
+					col += i_cols;
+					dentro = comprobarCoordenadas( fil, col );
+				}while (dentro && opuesta);
+				estado = posicion == ficha && cont > 1? true : false;
+				
+			}
+		}
 	}
 	return estado;
 }
