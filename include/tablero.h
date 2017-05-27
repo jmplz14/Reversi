@@ -39,7 +39,7 @@ class Tablero{
 		int obtenerPuntuacion(int jugador) const;
 		bool consultarPosicion(char col, int fil) const;
 		bool posibilidadMovimiento(int jugador) const;
-		bool colocarFicha(char cols, int fils);
+		bool colocarFicha(char col, int fil);
 		void vaciarTablero();
 	
 

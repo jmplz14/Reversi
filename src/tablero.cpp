@@ -112,7 +112,7 @@ bool Tablero::comprobarFichaOpuesta(int ficha, int posicion) const{
 
 bool Tablero::recorrerMatrizCompro (int fil , int i_fils, int col , int i_cols, int ficha ) const{
 	bool estado = false , dentro, opuesta;
-	int posicion, cont = 0;
+	int posicion;
 	
 	//se comprueba que la primera casilla no es ni una ficha igual ni esta vacia.
 	fil += i_fils; 
@@ -126,6 +126,7 @@ bool Tablero::recorrerMatrizCompro (int fil , int i_fils, int col , int i_cols, 
 			fil += i_fils; 
 			col += i_cols;
 			dentro = comprobarCoordenadas( fil, col );
+			// se hacen la primera comprobacion para para ver que la primera ficha sea la del oponente
 			if(dentro){	
 				do{
 
@@ -135,7 +136,9 @@ bool Tablero::recorrerMatrizCompro (int fil , int i_fils, int col , int i_cols, 
 					col += i_cols;
 					dentro = comprobarCoordenadas( fil, col );
 				}while (dentro && opuesta);
-				estado = posicion == ficha && cont > 1? true : false;
+				// si no se hace la primera comprobacion anteriror no podria mirar aqui si el estado es verdad o falso 
+				//si la fiecha es distinta o igual a si misma al salir del bucle
+				estado = posicion == ficha ? true : false;
 				
 			}
 		}
@@ -222,7 +225,7 @@ bool Tablero::consultarPosicion(char col, int fil) const{
 	
 	return estado;
 }
-bool Tablero::posibilidadMoviminto(int jugador){
+bool Tablero::posibilidadMovimiento(int jugador) const{
 	bool estado = false;
 	if (jugador == 1 || jugador == 2){
 		int fils = matriz.getFils(), cols = matriz.getCols();
