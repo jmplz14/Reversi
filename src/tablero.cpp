@@ -180,54 +180,54 @@ bool Tablero::comprobarRecInf(int fil , int col , int ficha) const{
 
 bool Tablero::comprobarLineas(int fil, int col, int ficha) const{
 	bool estado = false;
-	
 	//diagonal superior hacia la derecha la fila -1 a la columna +1
 	estado = comprobarDiaSupDer( fil, col, ficha ); 
-	
+
 	//diagonal superior hacia la izquierda la fila -1 a la columna -1
 	if( !estado )  
 		estado = comprobarDiaSupIzq( fil, col, ficha ); 			
-	
+
 	//diagonal inferior hacia la derecha la fila +1 a la columna +1
 	if( !estado )  
 		estado = comprobarDiaInfDer( fil, col, ficha ); 
-	
+
 	//diagonal inferior hacia la izquierda la fila +1 a la columna -1
 	if( !estado )  
 		estado = comprobarDiaInfIzq( fil, col, ficha ); 
 	// superior a la fila -1 la columna siempre igual
 	if(!estado)
 		estado = comprobarRecSup( fil, col, ficha ); 
-	
+
 	// inferior a la fila 1 la columna siempre igual
 	if( !estado )  
 		estado = comprobarRecInf( fil, col, ficha ); 			
-	
 	//derecha la fila siempre igual a la columna 1
 	if( !estado )  
 		estado = comprobarRecDer( fil, col, ficha ); 
-	
 	//izquierda la fila siempre igual a la columna -1
 	if( !estado )  
 		estado = comprobarRecIzq( fil, col, ficha );
 	
+		
 	return estado;
 }
 
 bool Tablero::consultarPosicion(char col, int fil) const{
 	int entero_col = transformarCharCol(col), ficha;
 	bool estado = false;
-	if ( matriz.getPosition( fil, entero_col ) == 0){
-		ficha = turnoActual();
-		estado = comprobarLineas( fil, entero_col, ficha );
+	if ( !estadoTablero() && comprobarCoordenadas(fil , entero_col) ){
 		
+		if ( matriz.getPosition( fil, entero_col ) == 0 ){
+			ficha = turnoActual();
+			estado = comprobarLineas( fil, entero_col, ficha );
+		
+		}
 	}
-	
 	return estado;
 }
 bool Tablero::posibilidadMovimiento(int jugador) const{
 	bool estado = false;
-	if (jugador == 1 || jugador == 2){
+	if ( (jugador == 1 || jugador == 2) && !estadoTablero() ){
 		int fils = matriz.getFils(), cols = matriz.getCols();
 		for (int i = 0 ; i < fils && !estado ; i++){
 			for (int j = 0 ; j < cols && !estado ; j++){
@@ -241,7 +241,86 @@ bool Tablero::posibilidadMovimiento(int jugador) const{
 	return estado;
 }
 
+void Tablero::cambiarFichas(int fil , int i_fils, int col , int i_cols, int ficha){ 
+	fil += i_fils;
+	col += i_cols;
+	//como solo se llamara cunado estemos seguros que la diagonal o la recta es correcta
+	//para el cambio solo tenemos que ir cambiando asta encontrarnos con la ficha dell oponente
+	while(matriz.getPosition(fil,col) != ficha){
+		
+		matriz.setPosition(fil , col, ficha);
+		
+		fil += i_fils;
+		col += i_cols;	
+	}
 
+}
+
+bool Tablero::colocarFicha(char col, int fil){
+	bool estado = false;
+	int entero_col = transformarCharCol(col);
+	int ficha = turnoActual();
+	if ( !estadoTablero() &&  comprobarCoordenadas(fil, entero_col)){
+		if(comprobarDiaSupDer( fil, entero_col, ficha )){
+			cambiarFichas(fil , -1 , entero_col , 1 , ficha);
+			estado = true;
+		}
+		
+		if(comprobarDiaSupIzq( fil, entero_col, ficha )){
+			cambiarFichas(fil , -1 , entero_col , -1 , ficha);
+			estado = true;
+		}
+		
+		if(comprobarDiaInfDer( fil, entero_col, ficha )){
+			cambiarFichas(fil , 1 , entero_col , 1 , ficha);
+			estado = true;
+		}
+		
+		if(comprobarDiaInfIzq( fil, entero_col, ficha )){
+			cambiarFichas(fil , 1 , entero_col , -1 , ficha);
+			estado = true;
+		}
+		
+		if(comprobarRecSup( fil, entero_col, ficha )){
+			cambiarFichas(fil , 1 , entero_col , 0 , ficha);
+			estado = true;
+		}
+		
+		if(comprobarRecInf( fil, entero_col, ficha )){
+			cambiarFichas(fil , -1 , entero_col , 0 , ficha);
+			estado = true;
+		}
+		
+		if(comprobarRecDer( fil, entero_col, ficha )){
+			cambiarFichas(fil , 0 , entero_col , 1 , ficha);
+			estado = true;
+		}
+		
+		if(comprobarRecIzq( fil, entero_col, ficha )){
+			cambiarFichas(fil , 0 , entero_col , -1 , ficha);
+			estado = true;
+		}
+		if( estado == true ){
+			matriz.setPosition(fil, entero_col, ficha);
+			n_fichas_colocadas++;
+			if(n_fichas_colocadas < (getFils() * getCols())){
+				turno_J1 = turno_J1 ? false : true;
+				if ( !posibilidadMovimiento(turnoActual())){
+					turno_J1 = turno_J1 ? false : true;
+					if (!posibilidadMovimiento(turnoActual()))
+						finalizado = true;
+				}
+					
+				
+			}else{
+				finalizado = true;
+			}
+		}
+	}
+	
+	
+	return estado;
+}
 
 
 

@@ -7,8 +7,10 @@ class Tablero{
 		bool finalizado;
 		bool turno_J1;
 		int n_fichas, n_fichas_colocadas;
+	
 		int transformarCharCol( char col) const;
 		bool comprobarLineas(int fil , int col , int ficha) const;
+		void cambiarFichas(int fil , int i_fils, int col , int i_cols, int ficha );
 		// a esta funcion se le pasa la fil y la columna aparte de lo valores que vamos a ir sumando
 		// estas para ir recorriendo el vector y ver si es una linea valida
 		bool recorrerMatrizCompro (int fil , int i_fils, int col , int i_cols, int ficha ) const;
@@ -34,6 +36,7 @@ class Tablero{
 		int getCols() const;
 		int getPosicion(char col, int fil) const;
 		int turnoActual() const;
+		// true si la partida esta finalizada y false si no lo esta aun
 		bool estadoTablero() const;
 		int obtenerGanador() const;
 		int obtenerPuntuacion(int jugador) const;
