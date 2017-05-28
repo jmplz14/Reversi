@@ -1,11 +1,11 @@
 #include "matriz.h"
 #include <assert.h>
 void Matriz::setFils( int n){
-	assert( n < 0 || n > 10);
+	assert( n >= 0 || n <= 10);
 	n_fils = n;
 }
 void Matriz::setCols( int n){
-	assert( n < 0 || n > 10);
+	assert( n >= 0 && n <= 10);
 	n_cols = n;
 }
 
@@ -33,11 +33,11 @@ int Matriz::getCols() const{
 }
 
 void Matriz::setPosition(int fils, int cols, int n){
-	assert( fils < 0 || fils >= n_fils || cols < 0 || cols >= n_cols);
+	assert( (fils >= 0 && fils < n_fils ) && (cols >= 0 && cols < n_cols) );
 	matriz[fils][cols] = n;
 }
 int Matriz::getPosition(int fils, int cols) const{
-	assert( fils < 0 || fils >= n_fils || cols < 0 || cols >= n_cols);
+	assert( (fils >= 0 && fils < n_fils ) && (cols >= 0 && cols < n_cols) );
 	return matriz[fils][cols];
 }
 

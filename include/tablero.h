@@ -43,9 +43,9 @@ class Tablero{
 		int obtenerPuntuacion(int jugador) const;
 		bool consultarPosicion(char col, int fil) const;
 		bool posibilidadMovimiento(int jugador) const;
-		bool colocarFicha(char col, int fil);
+		void colocarFicha(char col, int fil);
 		void vaciarTablero();
-		bool Escribir(std::ostream& os) const;
+		bool escribir(std::ostream& os) const;
 		
 	
 

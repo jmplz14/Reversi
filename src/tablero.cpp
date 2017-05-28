@@ -1,8 +1,8 @@
 #include "tablero.h"
 #include "matriz.h"
-#include <iostream>
+#include <assert.h>
 int Tablero::transformarCharCol( char col ) const{
-	return 'a' - col;
+	return col - 'a';
 }
 
 int Tablero::getFils() const{
@@ -15,13 +15,13 @@ void Tablero::vaciarTablero(){
 	int fils,cols,fils_centro,cols_centro;
 	fils = getFils();
 	cols = getCols();
-	fils_centro =  fils / 2;
-	cols_centro =  cols / 2;
-	
+	fils_centro =  fils / 2 - 1;
+	cols_centro =  cols / 2 - 1;
+		
 	for ( int i = 0 ; i < fils ; i++ )
-		for ( int j = 0 ; j < cols ; i++ )
+		for ( int j = 0 ; j < cols ; j++ )
 			matriz.setPosition( i , j, 0 );
-	
+
 	matriz.setPosition( fils_centro, cols_centro, 2 );
 	matriz.setPosition( fils_centro, cols_centro + 1, 1 );
 	matriz.setPosition( fils_centro + 1, cols_centro, 1);
@@ -87,18 +87,17 @@ int Tablero::obtenerPuntuacion( int jugador ) const{
 }
 
 int Tablero::obtenerGanador() const{
-	int ganador = -1;
-	if ( estadoTablero() ){ 
-		int fichas_1 = 0,fichas_2 = 0;
+	assert ( !estadoTablero() );
+	
+	int ganador, fichas_1 = 0,fichas_2 = 0;
 
-		fichas_1 = obtenerPuntuacion(1);
-		fichas_2 = n_fichas_colocadas - fichas_1;
+	fichas_1 = obtenerPuntuacion(1);
+	fichas_2 = n_fichas_colocadas - fichas_1;
 
-		if (fichas_1 == fichas_2 ){
-			ganador = 0;
-		}else{
-			ganador = fichas_1 > fichas_2 ? 1 : 2;
-		}
+	if (fichas_1 == fichas_2 ){
+		ganador = 0;
+	}else{
+		ganador = fichas_1 > fichas_2 ? 1 : 2;
 	}
 
 	return ganador;
@@ -257,79 +256,66 @@ void Tablero::cambiarFichas(int fil , int i_fils, int col , int i_cols, int fich
 
 }
 
-bool Tablero::colocarFicha(char col, int fil){
-	bool estado = false;
+void Tablero::colocarFicha(char col, int fil){
 	int entero_col = transformarCharCol(col);
+	assert ( estadoTablero() && comprobarCoordenadas(fil , entero_col) );
 	int ficha = turnoActual();
-	if ( !estadoTablero() &&  comprobarCoordenadas(fil, entero_col)){
-		if(comprobarDiaSupDer( fil, entero_col, ficha )){
-			cambiarFichas(fil , -1 , entero_col , 1 , ficha);
-			estado = true;
-		}
-		
-		if(comprobarDiaSupIzq( fil, entero_col, ficha )){
-			cambiarFichas(fil , -1 , entero_col , -1 , ficha);
-			estado = true;
-		}
-		
-		if(comprobarDiaInfDer( fil, entero_col, ficha )){
-			cambiarFichas(fil , 1 , entero_col , 1 , ficha);
-			estado = true;
-		}
-		
-		if(comprobarDiaInfIzq( fil, entero_col, ficha )){
-			cambiarFichas(fil , 1 , entero_col , -1 , ficha);
-			estado = true;
-		}
-		
-		if(comprobarRecSup( fil, entero_col, ficha )){
-			cambiarFichas(fil , 1 , entero_col , 0 , ficha);
-			estado = true;
-		}
-		
-		if(comprobarRecInf( fil, entero_col, ficha )){
-			cambiarFichas(fil , -1 , entero_col , 0 , ficha);
-			estado = true;
-		}
-		
-		if(comprobarRecDer( fil, entero_col, ficha )){
-			cambiarFichas(fil , 0 , entero_col , 1 , ficha);
-			estado = true;
-		}
-		
-		if(comprobarRecIzq( fil, entero_col, ficha )){
-			cambiarFichas(fil , 0 , entero_col , -1 , ficha);
-			estado = true;
-		}
-		if( estado == true ){
-			matriz.setPosition(fil, entero_col, ficha);
-			n_fichas_colocadas++;
-			if(n_fichas_colocadas < (getFils() * getCols())){
-				turno_J1 = turno_J1 ? false : true;
-				if ( !posibilidadMovimiento(turnoActual())){
-					turno_J1 = turno_J1 ? false : true;
-					if (!posibilidadMovimiento(turnoActual()))
-						finalizado = true;
-				}
-					
-				
-			}else{
-				finalizado = true;
-			}
-		}
+	if(comprobarDiaSupDer( fil, entero_col, ficha )){
+		cambiarFichas(fil , -1 , entero_col , 1 , ficha);
 	}
 	
+	if(comprobarDiaSupIzq( fil, entero_col, ficha )){
+		cambiarFichas(fil , -1 , entero_col , -1 , ficha);
+	}
 	
-	return estado;
+	if(comprobarDiaInfDer( fil, entero_col, ficha )){
+		cambiarFichas(fil , 1 , entero_col , 1 , ficha);
+	}
+	
+	if(comprobarDiaInfIzq( fil, entero_col, ficha )){
+		cambiarFichas(fil , 1 , entero_col , -1 , ficha);
+	}
+	
+	if(comprobarRecSup( fil, entero_col, ficha )){
+		cambiarFichas(fil , 1 , entero_col , 0 , ficha);
+	}
+		
+	if(comprobarRecInf( fil, entero_col, ficha )){
+		cambiarFichas(fil , -1 , entero_col , 0 , ficha);
+	}
+		
+	if(comprobarRecDer( fil, entero_col, ficha )){
+		cambiarFichas(fil , 0 , entero_col , 1 , ficha);
+	}
+	
+	if(comprobarRecIzq( fil, entero_col, ficha )){
+		cambiarFichas(fil , 0 , entero_col , -1 , ficha);
+	}
+	matriz.setPosition(fil, entero_col, ficha);
+	n_fichas_colocadas++;
+	if(n_fichas_colocadas < n_fichas){
+		turno_J1 = turno_J1 ? false : true;
+		if ( !posibilidadMovimiento(turnoActual())){
+			turno_J1 = turno_J1 ? false : true;
+			if (!posibilidadMovimiento(turnoActual()))
+				finalizado = true;
+		}
+					
+			
+		}else{
+			finalizado = true;
+		}
+		
 }
-bool Tablero::Escribir(std::ostream& os) const{
+bool Tablero::escribir(std::ostream& os) const{
 	int ficha;
+	char a = 'a';
 	if (os){
 		int fils = getFils() , cols = getCols();
-		os << std::endl;
+		os << std::endl << " ";
+		for (int i = 0; i < cols && os ; i++)
+			os << " " << static_cast<char>(a+i);
 		
-		for (char i = 'a'; i < cols && os ; i++)
-			os << i;
 		
 		os << std::endl;
 		
