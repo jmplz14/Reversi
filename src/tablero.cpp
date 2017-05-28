@@ -1,5 +1,6 @@
 #include "tablero.h"
 #include "matriz.h"
+#include <iostream>
 int Tablero::transformarCharCol( char col ) const{
 	return 'a' - col;
 }
@@ -321,7 +322,34 @@ bool Tablero::colocarFicha(char col, int fil){
 	
 	return estado;
 }
-
+bool Tablero::Escribir(std::ostream& os) const{
+	int ficha;
+	if (os){
+		int fils = getFils() , cols = getCols();
+		os << std::endl;
+		
+		for (char i = 'a'; i < cols && os ; i++)
+			os << i;
+		
+		os << std::endl;
+		
+		for (int i = 0; i < fils && os ; i++){
+				os << i << "|";
+			for (int j= 0; j < cols && os ; j++){
+				ficha = matriz.getPosition(i,j);
+				if(ficha == 1 || ficha == 2){
+					os << ficha << "|" ; 					
+				}else{
+					os << " |";
+				}			
+			}
+			os << std::endl;
+		}
+		os << std::endl;
+			
+	}
+	return os;
+}
 
 
 

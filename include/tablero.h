@@ -1,6 +1,7 @@
 #ifndef _TABLERO_H
 #define _TABLERO_H 
 #include "matriz.h"
+#include "iostream"
 class Tablero{
 	private:
 		Matriz matriz;
@@ -44,6 +45,8 @@ class Tablero{
 		bool posibilidadMovimiento(int jugador) const;
 		bool colocarFicha(char col, int fil);
 		void vaciarTablero();
+		bool Escribir(std::ostream& os) const;
+		
 	
 
 
