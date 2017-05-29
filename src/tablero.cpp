@@ -248,15 +248,13 @@ void Tablero::cambiarFichas(int fil , int i_fils, int col , int i_cols, int fich
 	col += i_cols;
 	//como solo se llamara cunado estemos seguros que la diagonal o la recta es correcta
 	//para el cambio solo tenemos que ir cambiando asta encontrarnos con la ficha dell oponente
-	while(matriz.getPosition(fil,col) != ficha){
-		
+	while(matriz.getPosition(fil,col) != ficha)
 		matriz.setPosition(fil , col, ficha);
 		
 		fil += i_fils;
 		col += i_cols;	
 	}
 
-}
 
 void Tablero::colocarFicha(char col, int fil){
 	int entero_col = transformarCharCol(col);

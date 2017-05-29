@@ -40,17 +40,20 @@ bool Jugador::escogerPosicion(std::istream& is, std::ostream& os, Tablero& table
 	int cols = tablero.getCols(); 
 	int fils = tablero.getFils();
 	int fil_valida, numero_posibilidades = 0;
-	char col_valida = 'a';
+	char col_valida = 'a',col_cont = 'a';
+	
 	bool encontrada,estado;
 	
 	for (int i = 0 ; i < fils && numero_posibilidades < 2; i++){
 		for(int j = 0; j < cols && numero_posibilidades < 2 ; j++){
-			encontrada=tablero.posibilidadMovimiento(turno);
+			col_cont += j;
+			encontrada=tablero.consultarPosicion(col_cont, i);
 			if (encontrada){
 				fil_valida = i;
-				col_valida = j;
+				col_valida = col_cont;
 				numero_posibilidades++;
 			}
+			col_cont = 'a';
 		}
 	}
 	//como minimo siempre tedremos un movimiento puesto que sino nuestra clase tablero no lo pondria como turno actual y 		pasaria al otro jugador.

@@ -24,7 +24,6 @@ int main(){
 			cout << "Introduzca el nombre del jugador 1: ";
 			cin.ignore();
 			cin.getline(n1,50);
-			
 			if (cin){
 				Jugador j1(n1,1);
 				cout << "Introduzca el nombre del jugador 2: ";
