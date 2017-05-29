@@ -41,6 +41,7 @@ Tablero::Tablero(){
 }
 
 Tablero::Tablero(int n){
+	assert( n >= 4 && n <= 10);
 	matriz.setFils( n );
 	matriz.setCols( n );
 	n_fichas = n * n;
@@ -48,6 +49,7 @@ Tablero::Tablero(int n){
 }
 
 Tablero::Tablero(int fils, int cols){
+	assert(fils >= 4 && fils <= 10 && cols >=4 && cols <= 10 );
 	matriz.setFils( fils );
 	matriz.setCols( cols );
 	n_fichas = fils * cols;
@@ -258,7 +260,7 @@ void Tablero::cambiarFichas(int fil , int i_fils, int col , int i_cols, int fich
 
 void Tablero::colocarFicha(char col, int fil){
 	int entero_col = transformarCharCol(col);
-	assert ( estadoTablero() && comprobarCoordenadas(fil , entero_col) );
+	assert ( !estadoTablero() && comprobarCoordenadas(fil , entero_col) && consultarPosicion(col,fil));
 	int ficha = turnoActual();
 	if(comprobarDiaSupDer( fil, entero_col, ficha )){
 		cambiarFichas(fil , -1 , entero_col , 1 , ficha);
@@ -277,11 +279,11 @@ void Tablero::colocarFicha(char col, int fil){
 	}
 	
 	if(comprobarRecSup( fil, entero_col, ficha )){
-		cambiarFichas(fil , 1 , entero_col , 0 , ficha);
+		cambiarFichas(fil , -1 , entero_col , 0 , ficha);
 	}
 		
 	if(comprobarRecInf( fil, entero_col, ficha )){
-		cambiarFichas(fil , -1 , entero_col , 0 , ficha);
+		cambiarFichas(fil , 1 , entero_col , 0 , ficha);
 	}
 		
 	if(comprobarRecDer( fil, entero_col, ficha )){
@@ -307,24 +309,25 @@ void Tablero::colocarFicha(char col, int fil){
 		}
 		
 }
-bool Tablero::escribir(std::ostream& os) const{
+void Tablero::escribir(std::ostream& os) const{
 	int ficha;
 	char a = 'a';
-	if (os){
 		int fils = getFils() , cols = getCols();
 		os << std::endl << " ";
-		for (int i = 0; i < cols && os ; i++)
+		for (int i = 0; i < cols; i++)
 			os << " " << static_cast<char>(a+i);
 		
 		
 		os << std::endl;
 		
-		for (int i = 0; i < fils && os ; i++){
+		for (int i = 0; i < fils; i++){
 				os << i << "|";
-			for (int j= 0; j < cols && os ; j++){
+			for (int j= 0; j < cols; j++){
 				ficha = matriz.getPosition(i,j);
-				if(ficha == 1 || ficha == 2){
-					os << ficha << "|" ; 					
+				if(ficha == 1){
+					os << 'o' << "|" ;
+				}else if(ficha == 2){
+					os << 'x' << "|" ;
 				}else{
 					os << " |";
 				}			
@@ -333,8 +336,6 @@ bool Tablero::escribir(std::ostream& os) const{
 		}
 		os << std::endl;
 			
-	}
-	return os;
 }
 
 

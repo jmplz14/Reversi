@@ -45,7 +45,7 @@ class Tablero{
 		bool posibilidadMovimiento(int jugador) const;
 		void colocarFicha(char col, int fil);
 		void vaciarTablero();
-		bool escribir(std::ostream& os) const;
+		void escribir(std::ostream& os) const;
 		
 	
 
