@@ -5,17 +5,18 @@ class Jugador{
 	private:
 		char nombre[50];
 		int puntos, turno, p_ganadas;
-		void limpiarEntrada(std::istream& is);		
-		void dialogoEscoger(std::istream& is, std::ostream& os, Tablero& tablero);
+		void limpiarEntrada(std::istream& is) const;		
+		void dialogoEscoger(std::istream& is, std::ostream& os, Tablero& tablero) const;
 	public:
 		Jugador(const char datos[], int ficha);
 		int getPuntos() const;
 		int getTurno() const;
+		int getGanadas() const;
 		void setTurno(int n);
 		void sumarPuntuacion(const Tablero& tablero);
 		void cambiarNombre(const char datos[]);
 		const char* getNombre() const;
-		void escogerPosicion(std::istream& is, std::ostream& os, Tablero &tablero);
+		void escogerPosicion(std::istream& is, std::ostream& os, Tablero &tablero) const;
 		
 };
 

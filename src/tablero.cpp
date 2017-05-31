@@ -89,7 +89,7 @@ int Tablero::obtenerPuntuacion( int jugador ) const{
 }
 
 int Tablero::obtenerGanador() const{
-	assert ( !estadoTablero() );
+	assert ( estadoTablero() );
 	
 	int ganador, fichas_1 = 0,fichas_2 = 0;
 
@@ -228,12 +228,14 @@ bool Tablero::consultarPosicion(char col, int fil) const{
 	return estado;
 }
 bool Tablero::posibilidadMovimiento(int jugador) const{
+	assert(jugador == 1 || jugador == 2);
 	bool estado = false;
-	if ( (jugador == 1 || jugador == 2) && !estadoTablero() ){
+	if ( !estadoTablero() ){
 		int fils = matriz.getFils(), cols = matriz.getCols();
 		for (int i = 0 ; i < fils && !estado ; i++){
 			for (int j = 0 ; j < cols && !estado ; j++){
-				estado = comprobarLineas(i , j , jugador);
+				if(matriz.getPosition(i,j) == 0)
+					estado = comprobarLineas(i , j , jugador);
 				
 										
 			}
@@ -248,12 +250,14 @@ void Tablero::cambiarFichas(int fil , int i_fils, int col , int i_cols, int fich
 	col += i_cols;
 	//como solo se llamara cunado estemos seguros que la diagonal o la recta es correcta
 	//para el cambio solo tenemos que ir cambiando asta encontrarnos con la ficha dell oponente
-	while(matriz.getPosition(fil,col) != ficha)
+	while(matriz.getPosition(fil,col) != ficha){
 		matriz.setPosition(fil , col, ficha);
 		
 		fil += i_fils;
 		col += i_cols;	
 	}
+	
+}
 
 
 void Tablero::colocarFicha(char col, int fil){
@@ -295,16 +299,19 @@ void Tablero::colocarFicha(char col, int fil){
 	n_fichas_colocadas++;
 	if(n_fichas_colocadas < n_fichas){
 		turno_J1 = turno_J1 ? false : true;
+			std::cout << turnoActual() << std::endl;
 		if ( !posibilidadMovimiento(turnoActual())){
 			turno_J1 = turno_J1 ? false : true;
-			if (!posibilidadMovimiento(turnoActual()))
+				std::cout << turnoActual() << std::endl;
+			if (!posibilidadMovimiento(turnoActual())){
 				finalizado = true;
+			}
 		}
 					
 			
-		}else{
-			finalizado = true;
-		}
+	}else{
+		finalizado = true;
+	}
 		
 }
 void Tablero::escribir(std::ostream& os) const{

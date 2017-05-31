@@ -16,6 +16,9 @@ void Jugador::sumarPuntuacion(const Tablero& tablero){
 	p_ganadas = ganador == turno ? p_ganadas + 1 : p_ganadas;
 	
 }
+int Jugador::getGanadas() const{
+	return p_ganadas;
+}
 int Jugador::getPuntos() const{
 	return puntos;
 }
@@ -36,7 +39,7 @@ const char* Jugador::getNombre() const{
 }
 //no se hace funcion bool porque esta funcion entra en bucle siempre que la posicion insertada se erronea de modo que nunca
 //se tendra una posicion invalida introducida por el usuario al final de la funcion ni tendremos ningun tipo de error
-void Jugador::escogerPosicion(std::istream& is, std::ostream& os, Tablero& tablero){
+void Jugador::escogerPosicion(std::istream& is, std::ostream& os, Tablero& tablero) const {
 	assert ( !tablero.estadoTablero() && tablero.turnoActual() == turno );
 	//no tengo que hacer comprobacion de si se hay una posicion libre en la que poder colocar
 	//la ficha porque si nuestra clase tablero si no puediera mover ningun jugador finalizacia el tablero
@@ -68,12 +71,12 @@ void Jugador::escogerPosicion(std::istream& is, std::ostream& os, Tablero& table
 			
 	}
 }
-void Jugador::limpiarEntrada(std::istream& is){
+void Jugador::limpiarEntrada(std::istream& is) const {
 	is.clear();
 	is.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
 }
 
-void Jugador::dialogoEscoger(std::istream& is,std::ostream& os, Tablero& tablero){
+void Jugador::dialogoEscoger(std::istream& is,std::ostream& os, Tablero& tablero) const{
 	bool estado;
 	int fil;
 	char col_max = 'a',col;
