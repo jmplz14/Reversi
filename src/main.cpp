@@ -2,6 +2,7 @@
 #include "jugador.h"
 #include <iostream>
 using namespace std;
+
 int main(){
 	char n1[50], n2[50];
 	int fil ,col;
@@ -32,14 +33,14 @@ int main(){
 				if (cin){	
 					Jugador j2(n2,2);
 					t.escribir(cout);
-					while(!t.estadoTablero() && estado && cin){
+					while(!t.estadoTablero()){
 						if(t.turnoActual() == 1){
 							cout << "Turno del jugador 1(o)" << endl;
-							estado = j1.escogerPosicion(cin,cout,t);
+							j1.escogerPosicion(cin,cout,t);
 							t.escribir(cout);		
 						}else{
 							cout << "Turno del jugador 2(x)"<< endl;
-							estado = j2.escogerPosicion(cin,cout,t);							
+							j2.escogerPosicion(cin,cout,t);							
 							t.escribir(cout);							
 						}
 					}
@@ -62,7 +63,7 @@ int main(){
 	}else {
 		cout << "Error al introducir los datos de la fila" << endl;
 	}
-
+	
 }
 	
 	
