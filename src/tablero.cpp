@@ -77,7 +77,7 @@ int Tablero::obtenerPuntuacion( int jugador ) const{
 		int cols =  getCols();
 		
 		for ( int i = 0; i < fils ; i++ )
-			for ( int j = 0 ; i < cols; i++ )
+			for ( int j = 0 ; j < cols; j++ )
 				if ( matriz.getPosition( i, j ) == jugador )
 					puntuacion++;
 			
@@ -299,10 +299,8 @@ void Tablero::colocarFicha(char col, int fil){
 	n_fichas_colocadas++;
 	if(n_fichas_colocadas < n_fichas){
 		turno_J1 = turno_J1 ? false : true;
-			std::cout << turnoActual() << std::endl;
 		if ( !posibilidadMovimiento(turnoActual())){
 			turno_J1 = turno_J1 ? false : true;
-				std::cout << turnoActual() << std::endl;
 			if (!posibilidadMovimiento(turnoActual())){
 				finalizado = true;
 			}

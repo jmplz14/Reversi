@@ -3,7 +3,10 @@
 #include <iostream>
 #include <limits>
 using namespace std;
-
+void limpiarCin(std::istream& is){
+	is.clear();
+	is.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+}
 void iniciarPartida(istream& is, ostream& os, Tablero& t,const Jugador& j1 , const Jugador& j2){
 	int turno_anterior, turno;
 	t.escribir(cout);
@@ -12,7 +15,7 @@ void iniciarPartida(istream& is, ostream& os, Tablero& t,const Jugador& j1 , con
 			os << "Turno del jugador 1(o)" << endl;
 			j1.escogerPosicion(is,os,t);
 			t.escribir(cout);		
-		}else{
+		}else{ 
 			os << "Turno del jugador 2(x)"<< endl;
 			j2.escogerPosicion(is,os,t);							
 			t.escribir(cout);							
@@ -30,7 +33,7 @@ void iniciarPartida(istream& is, ostream& os, Tablero& t,const Jugador& j1 , con
 			t.escribir(cout);		
 		}else{
 			if (turno_anterior == turno)
-				cout << j1.getNombre() << " /turno 1)no tiene ningun movimiento posible, tiene que pasar turno." << endl;
+				cout << j1.getNombre() << " (turno 1)no tiene ningun movimiento posible, tiene que pasar turno." << endl;
 			
 			os << "Turno del jugador 2(x)"<< endl;
 			j2.escogerPosicion(is,os,t);							
@@ -41,7 +44,7 @@ void iniciarPartida(istream& is, ostream& os, Tablero& t,const Jugador& j1 , con
 	}
 }
 void mostrarResultadosJugador(ostream& os, const Jugador& j){
-	os << j.getNombre() << ": " << j.getGanadas() << "ganadas que acumlan " << j.getPuntos() << endl ;
+	os << j.getNombre() << ": " << j.getGanadas() << " ganadas que acumulan " << j.getPuntos() << endl ;
 }
 void obtenerResultadosPartida(ostream& os, const Tablero& t , Jugador& j1, Jugador& j2){
 	int ganador;
@@ -60,9 +63,15 @@ void obtenerResultadosPartida(ostream& os, const Tablero& t , Jugador& j1, Jugad
 	mostrarResultadosJugador(os,j2);
 	 
 }
+void resultadosFinales(ostream& os, Jugador& j1, Jugador& j2, int n_partidas){
+	os << "Resultados finales:" << endl;
+	mostrarResultadosJugador(os,j1);
+	mostrarResultadosJugador(os,j2);
+	cout << n_partidas - j1.getGanadas() - j2.getGanadas() << " empatadas" << endl;
+}
 int main(){
-	char n1[50], n2[50];
-	int fil ,col, ganador;
+	char n1[50], n2[50], nueva_partida;
+	int fil ,col, ganador, n_partidas = 0;
 	bool estado = true;
 	cout << "Introduzca el numero de filas(4-10): ";
 	cin >> fil;
@@ -88,10 +97,22 @@ int main(){
 				cin.getline(n2,50);
 				if (cin){	
 					Jugador j2(n2,2);
-
-					iniciarPartida(cin,cout,t,j1,j2);
-					cout << "Fin de la partida: ";
-					obtenerResultadosPartida(cout,t,j1,j2);
+					do{
+						
+						iniciarPartida(cin,cout,t,j1,j2);
+						cout << "Fin de la partida: ";
+						obtenerResultadosPartida(cout,t,j1,j2);
+						n_partidas++;
+						cout << "Introduzca una s para volver a jugar o una n para terminar y ver los resultados: ";
+						cin >> nueva_partida;
+						while (nueva_partida != 's' && nueva_partida != 'n' || !cin){
+							limpiarCin(cin);							
+							cout << "Error introduzca s o n: ";
+							cin >> nueva_partida;
+						}
+						t.vaciarTablero();
+					}while(nueva_partida == 's');
+					resultadosFinales(cout,j1, j2, n_partidas);
 				}else{
 					cout << "Error al introducir los datos del jugador2;" << endl;
 				}
@@ -106,6 +127,7 @@ int main(){
 	}else {
 		cout << "Error al introducir los datos de la fila" << endl;
 	}
+	
 	
 }
 	
