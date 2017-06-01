@@ -127,8 +127,7 @@ int main(){
 	}else {
 		cout << "Error al introducir los datos de la fila" << endl;
 	}
-	
-	
+
 }
 	
 	

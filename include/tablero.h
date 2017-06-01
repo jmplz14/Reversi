@@ -31,7 +31,7 @@ class Tablero{
 		bool comprobarRecInf(int fil , int col , int ficha) const;
 	public:
 		Tablero();
-		Tablero(int fils);
+		Tablero(int n);
 		Tablero(int fils, int cols);
 		int getFils() const;
 		int getCols() const;

@@ -2,17 +2,20 @@
 #define _MATRIZ_H 
 class Matriz{
 	private:
-		int matriz[10][10];
+		int* matriz;
 		int n_cols, n_fils;
-	
+		void reservarTamano();
+		void anadirDatos(int fils , int cols);
+
 	public:
 		Matriz(); 
 		Matriz(int n);
 		Matriz(int fils, int cols);
+		Matriz(const Matriz& m);
+		~Matriz();
+		Matriz& operator=(const Matriz& m);
 		int getFils() const;
-		void setFils(int n);
 		int getCols() const;
-		void setCols(int n);
 		int getPosition(int fils, int cols) const;
 		void setPosition(int fils, int cols, int n);
 		

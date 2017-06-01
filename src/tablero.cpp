@@ -1,6 +1,7 @@
 #include "tablero.h"
 #include "matriz.h"
 #include <assert.h>
+#include <iomanip>
 int Tablero::transformarCharCol( char col ) const{
 	return col - 'a';
 }
@@ -32,26 +33,18 @@ void Tablero::vaciarTablero(){
 	finalizado = false;
 }
 
-Tablero::Tablero(){
+Tablero::Tablero():matriz(8,8){
 	int n = 8;
-	matriz.setFils( n );
-	matriz.setCols( n );
 	n_fichas = n * n;
 	vaciarTablero();
 }
 
-Tablero::Tablero(int n){
-	assert( n >= 4 && n <= 10);
-	matriz.setFils( n );
-	matriz.setCols( n );
+Tablero::Tablero(int n):matriz(n,n){
 	n_fichas = n * n;
 	vaciarTablero();
 }
 
-Tablero::Tablero(int fils, int cols){
-	assert(fils >= 4 && fils <= 10 && cols >=4 && cols <= 10 );
-	matriz.setFils( fils );
-	matriz.setCols( cols );
+Tablero::Tablero(int fils, int cols):matriz(fils,cols){
 	n_fichas = fils * cols;
 	vaciarTablero();
 }
@@ -324,7 +317,7 @@ void Tablero::escribir(std::ostream& os) const{
 		os << std::endl;
 		
 		for (int i = 0; i < fils; i++){
-				os << i << "|";
+				os << i<< std::left << "|";
 			for (int j= 0; j < cols; j++){
 				ficha = matriz.getPosition(i,j);
 				if(ficha == 1){
