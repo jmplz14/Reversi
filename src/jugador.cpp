@@ -77,7 +77,7 @@ const char* Jugador::getNombre() const{
 }
 //no se hace funcion bool porque esta funcion entra en bucle siempre que la posicion insertada se erronea de modo que nunca
 //se tendra una posicion invalida introducida por el usuario al final de la funcion ni tendremos ningun tipo de error
-void Jugador::escogerPosicion(std::istream& is, std::ostream& os, Tablero& tablero) const {
+bool Jugador::escogerPosicion(std::istream& is, std::ostream& os, Tablero& tablero) const {
 	assert ( !tablero.estadoTablero() && tablero.turnoActual() == turno );
 	//no tengo que hacer comprobacion de si se hay una posicion libre en la que poder colocar
 	//la ficha porque si nuestra clase tablero si no puediera mover ningun jugador finalizacia el tablero
@@ -86,7 +86,7 @@ void Jugador::escogerPosicion(std::istream& is, std::ostream& os, Tablero& table
 	int fil_valida, numero_posibilidades = 0;
 	char col_valida = 'a',col_cont = 'a';
 	
-	bool encontrada;
+	bool encontrada,parada = false;
 	
 	for (int i = 0 ; i < fils && numero_posibilidades < 2; i++){
 		for(int j = 0; j < cols && numero_posibilidades < 2 ; j++){
@@ -105,40 +105,56 @@ void Jugador::escogerPosicion(std::istream& is, std::ostream& os, Tablero& table
 		tablero.colocarFicha(col_valida, fil_valida);
 		os << nombre << ", solo tenia un movimiento valido("<< col_valida << fil_valida <<")";
 	}else{
-		dialogoEscoger(is, os, tablero);
+		parada=dialogoEscoger(is, os, tablero);
 			
 	}
+	tablero.escribir(os);
+	if ( !parada && !tablero.estadoTablero() && tablero.turnoActual() == turno){
+		if (turno == 1 ){
+			os << "Jugador 2 no tiene posibilidad de movimientos tiene que pasar turno." << std::endl; 
+		}else{
+			os << "Jugador 1 no tiene posibilidad de movimientos tiene que pasar turno." << std::endl; 		
+		}
+	}
+	return parada;
 }
 void Jugador::limpiarEntrada(std::istream& is) const {
 	is.clear();
 	is.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
 }
 
-void Jugador::dialogoEscoger(std::istream& is,std::ostream& os, Tablero& tablero) const{
-	bool estado;
+bool Jugador::dialogoEscoger(std::istream& is,std::ostream& os, Tablero& tablero) const{
+	bool estado, parada = false;
 	int fil;
 	char col_max = 'a',col;
 	col_max += tablero.getCols()-1; 
 	os << std::endl << getNombre() << ", escoja una columan (letra a-" << col_max << ") y una fila (0-" << tablero.getFils()-1 << "): ";
 	is >> col;
-	is >> fil;
-	if(is){
-		estado = tablero.consultarPosicion(col,fil);
+	if(is && col == '!'){
+		parada = true;
 	}else{
-		estado = false;
-		limpiarEntrada(is);
-	}
-	while (!estado){
-		os << "Introduza una posicion valida: ";
-		is >> col;
 		is >> fil;
-		if (is){
-			estado = tablero.consultarPosicion(col,fil);			
+		if(is){
+			estado = tablero.consultarPosicion(col,fil);
 		}else{
-			estado=false;
+			estado = false;
 			limpiarEntrada(is);
 		}
-		
+		while (!estado && !parada ){
+			os << "Introduza una posicion valida: ";
+			is >> col;
+			if (is && col == '!'){
+				parada = true;
+			}else{
+				is >> fil;
+				if (is){
+					estado = tablero.consultarPosicion(col,fil);			
+				}else{
+					estado=false;
+					limpiarEntrada(is);
+				}
+			}
+		}	
 	}
 	// limpiamos la entrada para que en caso de que el jugador metiera una doble posicion no se guradara para el sigueinte 
 	//turno y pudiera colocar una ficha en el turno del siguiente jugador;
@@ -146,8 +162,10 @@ void Jugador::dialogoEscoger(std::istream& is,std::ostream& os, Tablero& tablero
 	//y en el siguiente se usaria la posicion b3
 	//no lo hago con el is.eof() porque eso obliga a tener que introducir un ctrl+d al usuario al meter la posicion
 	limpiarEntrada(is);
-	tablero.colocarFicha(col, fil);
-	
+	if (!parada){	
+		tablero.colocarFicha(col, fil);
+	}
+	return parada;
 }
 void Jugador::setTurno(int n){
 	assert( n == 1 || n == 2);

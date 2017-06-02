@@ -6,7 +6,7 @@ class Jugador{
 		char *nombre;
 		int puntos, turno, p_ganadas;
 		void limpiarEntrada(std::istream& is) const;		
-		void dialogoEscoger(std::istream& is, std::ostream& os, Tablero& tablero) const;
+		bool dialogoEscoger(std::istream& is, std::ostream& os, Tablero& tablero) const;
 	public:
 		Jugador(const char datos[], int ficha);
 		~Jugador();
@@ -19,7 +19,7 @@ class Jugador{
 		void sumarPuntuacion(const Tablero& tablero);
 		void cambiarNombre(const char datos[]);
 		const char* getNombre() const;
-		void escogerPosicion(std::istream& is, std::ostream& os, Tablero &tablero) const;
+		bool escogerPosicion(std::istream& is, std::ostream& os, Tablero &tablero) const;
 		
 };
 
