@@ -24,7 +24,9 @@ void Matriz::anadirDatos(int fils, int cols){
 	n_cols = cols;
 }
 Matriz::~Matriz(){
+	
 	delete [] matriz;
+	matriz = 0;
 }
 Matriz& Matriz::operator=(const Matriz& m){
 	if(this!=&m){

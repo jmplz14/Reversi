@@ -3,12 +3,15 @@
 #include "tablero.h"
 class Jugador{
 	private:
-		char nombre[50];
+		char *nombre;
 		int puntos, turno, p_ganadas;
 		void limpiarEntrada(std::istream& is) const;		
 		void dialogoEscoger(std::istream& is, std::ostream& os, Tablero& tablero) const;
 	public:
 		Jugador(const char datos[], int ficha);
+		~Jugador();
+		Jugador(const Jugador& j);
+		Jugador& operator=(const Jugador& j);
 		int getPuntos() const;
 		int getTurno() const;
 		int getGanadas() const;

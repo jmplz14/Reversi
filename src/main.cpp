@@ -5,7 +5,7 @@
 using namespace std;
 void limpiarCin(std::istream& is){
 	is.clear();
-	is.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+	is.ignore(numeric_limits<streamsize>::max(),'\n');
 }
 void iniciarPartida(istream& is, ostream& os, Tablero& t,const Jugador& j1 , const Jugador& j2){
 	int turno_anterior, turno;
@@ -90,11 +90,11 @@ int main(){
 			Tablero t(fil,col);
 			cout << "Introduzca el nombre del jugador 1: ";
 			cin.ignore();
-			cin.getline(n1,50);
+			cin.getline(n1,numeric_limits<streamsize>::max());
 			if (cin){
 				Jugador j1(n1,1);
 				cout << "Introduzca el nombre del jugador 2: ";
-				cin.getline(n2,50);
+				cin.getline(n2,numeric_limits<streamsize>::max());
 				if (cin){	
 					Jugador j2(n2,2);
 					do{
@@ -113,6 +113,8 @@ int main(){
 						t.vaciarTablero();
 					}while(nueva_partida == 's');
 					resultadosFinales(cout,j1, j2, n_partidas);
+					
+					
 				}else{
 					cout << "Error al introducir los datos del jugador2;" << endl;
 				}

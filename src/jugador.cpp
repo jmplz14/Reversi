@@ -5,10 +5,15 @@
 #include <limits>
 Jugador::Jugador(const char datos[], int ficha) {
 	assert( (ficha == 1 || ficha == 2) );
+	nombre = 0;
 	cambiarNombre(datos);
 	p_ganadas = 0;
 	puntos = 0;
 	turno = ficha;
+}
+Jugador::~Jugador(){
+	delete [] nombre;
+	nombre = 0; 
 }
 void Jugador::sumarPuntuacion(const Tablero& tablero){
 	int puntuacion = tablero.obtenerPuntuacion(turno) ,  ganador =tablero.obtenerGanador() ;
@@ -25,14 +30,47 @@ int Jugador::getPuntos() const{
 int Jugador::getTurno() const{
 	return turno;
 }
-void Jugador::cambiarNombre(const char datos[]){
-	int cont = 0;
-	while (datos[cont] != '\0'&& cont < 49){
-		nombre[cont] = datos[cont];
-		cont++;
-	}
-	nombre[cont] = '\0';
+Jugador::Jugador(const Jugador& j){
+	//como el jugador nunca puede tener a 0 el nombre como minimo tendra un char de una poscion con \0
+	//no tenemos que comprobar que nombre = 0
+	this->turno = j.turno;
+	this->puntos = j.puntos;
+	this->p_ganadas = j.p_ganadas;
+	this->nombre = 0;
+	this->cambiarNombre(j.nombre); 
 }
+void Jugador::cambiarNombre(const char datos[]){
+	//Si se le pasa un nombre sin ningun caracter simplemente crea un 
+	//array c de tamano vacio y con esto no obligamos a tener que comprobar que 
+	//lo meta vacio
+	int cont = 0;
+	int tamano = 0;
+	
+	while (datos[tamano] != '\0')
+		tamano++;
+	
+	//Se le suma uno para obtener el tamaño puesto que lo que se tiene es la ultima posicion
+		tamano++;
+		   
+		delete [] nombre;
+		nombre = new char [tamano];		   
+		
+		while (cont < tamano){
+			nombre[cont] = datos[cont];
+			cont++;	
+		}
+}
+
+Jugador& Jugador::operator=(const Jugador& j){
+	if (this != &j){
+		this->turno = j.turno;
+		this->puntos = j.puntos;
+		this->p_ganadas = j.p_ganadas;
+		this->nombre = 0;
+		this->cambiarNombre(j.nombre); 
+	}
+}
+
 const char* Jugador::getNombre() const{
 	//const char* inicio = nombre;
 	return nombre;
