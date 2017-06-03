@@ -2,12 +2,38 @@
 #include "jugador.h"
 #include "matriz.h"
 #include <iostream>
+#include <fstream>
 #include <limits>
 using namespace std;
 void limpiarCin(std::istream& is){
 	is.clear();
 	is.ignore(numeric_limits<streamsize>::max(),'\n');
 }
+
+
+void salvar(istream& is, ostream& os, const Tablero& t, const Jugador& j1, const Jugador& j2, int n_partidas ){
+	const int tamano=255;
+	char fichero[tamano];
+	std::ofstream f;
+	os << "Introduzca el nombre del archivo: ";
+	is.ignore();
+	is.getline(fichero, tamano , '\n');
+	f.open(fichero);
+	while(!f){
+		limpiarCin(cin);
+		os << "Introduzca un nombre de archivo valido: ";
+		cin.getline(fichero, tamano , '\n');
+		f.open(fichero);
+	}
+	f << "#MP-SUPER-REVERSI-1.0" << std::endl;
+	f << t << std::endl;
+	f << j1 << std::endl;
+	f << j2 << std::endl;
+	f << n_partidas - j1.getGanadas() - j2.getGanadas();
+	
+}
+
+
 bool iniciarPartida(istream& is, ostream& os, Tablero& t,const Jugador& j1 , const Jugador& j2){
 	bool parada=false;
 	t.escribir(cout);	
@@ -17,6 +43,7 @@ bool iniciarPartida(istream& is, ostream& os, Tablero& t,const Jugador& j1 , con
 		if(t.turnoActual() == 1){
 			os << "Turno del jugador 1(o)" << endl;
 			parada=j1.escogerPosicion(is,os,t);
+			
 		}else{
 			
 			os << "Turno del jugador 2(x)"<< endl;
@@ -54,7 +81,7 @@ void resultadosFinales(ostream& os, Jugador& j1, Jugador& j2, int n_partidas){
 }
 int main(){
 	int tamano=1024;
-	char n1[tamano], n2[tamano], nueva_partida;
+	char n1[tamano], n2[tamano], nueva_partida, guardar;
 	int fil ,col, ganador, n_partidas = 0;
 	bool estado = true, parada;
 	cout << "Introduzca el numero de filas(4-10): ";
@@ -86,23 +113,38 @@ int main(){
 					do{
 						
 						parada = iniciarPartida(cin,cout,t,j1,j2);
-							cout << "Fin de la partida: ";
+						
+						cout << "Fin de la partida: ";
 						if (!parada){
 							obtenerResultadosPartida(cout,t,j1,j2);
 							n_partidas++;
 							cout << "Introduzca una s para volver a jugar o una n para terminar y ver los resultados: ";
 							cin >> nueva_partida;
-							while (nueva_partida != 's' && nueva_partida != 'n' || !cin){
+							while ( nueva_partida != 's' && nueva_partida != 'n' && !cin){
 								limpiarCin(cin);							
 								cout << "Error introduzca s o n: ";
 								cin >> nueva_partida;
 							}
+						}else{
+							cout << endl << "¿Quiere guardar la partida (s o n)? ";
+							cin >> guardar; 
+							while ( (guardar != 's' && guardar != 'n') || !cin){
+								limpiarCin(cin);							
+								cout << "Error introduzca s o n: ";
+								cin >> guardar;
+							}
+							if (guardar == 's'){
+								salvar(cin,cout,t,j1,j2,n_partidas);
+							}
+							
+						
 						}
 						t.vaciarTablero();
-						
+									
 					}while(!parada && nueva_partida == 's');
-					
-						resultadosFinales(cout,j1, j2, n_partidas);
+					//Se deja que se muestren los resultados aunque se paren o se muestren
+					//para ver como iva la partida
+					resultadosFinales(cout,j1, j2, n_partidas);
 				
 					
 				}else{

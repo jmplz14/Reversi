@@ -107,7 +107,8 @@ bool Jugador::escogerPosicion(std::istream& is, std::ostream& os, Tablero& table
 		parada=dialogoEscoger(is, os, tablero);
 			
 	}
-	tablero.escribir(os);
+	if (!parada)
+		tablero.escribir(os);
 	if ( !parada && !tablero.estadoTablero() && tablero.turnoActual() == turno){
 		if (turno == 1 ){
 			os << "Jugador 2 no tiene posibilidad de movimientos tiene que pasar turno." << std::endl; 
