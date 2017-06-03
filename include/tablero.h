@@ -1,7 +1,7 @@
 #ifndef _TABLERO_H
 #define _TABLERO_H 
 #include "matriz.h"
-#include "iostream"
+#include <iostream>
 class Tablero{
 	private:
 		Matriz matriz;
@@ -46,7 +46,8 @@ class Tablero{
 		void colocarFicha(char col, int fil);
 		void vaciarTablero();
 		void escribir(std::ostream& os) const;
-		
+		friend std::ostream& operator<< (std::ostream& os, const Tablero& t);
+		friend std::istream& operator>> (std::istream& is, Tablero& t);		
 	
 
 

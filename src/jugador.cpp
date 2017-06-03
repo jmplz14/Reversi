@@ -1,6 +1,5 @@
 #include "tablero.h"
 #include "jugador.h"
-#include <iostream>
 #include <assert.h>
 #include <limits>
 Jugador::Jugador(const char datos[], int ficha) {
@@ -170,13 +169,47 @@ bool Jugador::dialogoEscoger(std::istream& is,std::ostream& os, Tablero& tablero
 void Jugador::setTurno(int n){
 	assert( n == 1 || n == 2);
 	turno = n;
+}
+void Jugador::setPuntos(int n){
+	puntos = n;
+}
+void Jugador::setGanadas(int n){
+	p_ganadas = n;
 }	
+std::ostream& operator<< (std::ostream& os, const Jugador& j){	
+	os <<"!" << j.nombre << std::endl << j.turno << " " << j.p_ganadas << " " << j.puntos << std::endl;
+	return os;
+}			
+std::istream& operator>> (std::istream& is, Jugador& j){
+	char nombre[1024],inicio;
+	int turno,puntos,ganadas;
+	is >> inicio;
+	while (inicio != '!'){
+		is.ignore(1024,'\n');
+		is >> inicio;
+	}
+	if(inicio == '!'){
+		is.getline(nombre,1024,'\n');
+		std::cout << nombre << std::endl;
+		is >> turno;
+		std::cout << turno << std::endl;
+		
+		Jugador jugador(nombre,turno);		
+		is >> ganadas;
+		is >> puntos;
+		jugador.setPuntos(puntos);
+		jugador.setGanadas(ganadas);
+		j=jugador;
+	}
 	
+
+	
+	return is;
+}
+
 			
 			
 			
 			
 			
-			
-			
-			
+

@@ -76,9 +76,32 @@ int Matriz::getPosition(int fils, int cols) const{
 	assert( (fils >= 0 && fils < n_fils ) && (cols >= 0 && cols < n_cols) );
 	return matriz[fils * n_cols + cols];
 }
-
-
-
+std::ostream& operator<< (std::ostream& os, const Matriz& m){
+	int fils=m.n_fils, cols=m.n_cols;
+	os << fils << " ";
+	os << cols << std::endl;
+	for (int i = 0; i < fils; i++ ){
+		for (int j = 0; j < cols; j++ ){
+			os << m.getPosition(i,j) << " ";
+		}
+		os << std::endl;
+	}
+	return os;
+}
+std::istream& operator>> (std::istream& is, Matriz& m){
+	int fils,cols,dato;
+	is >> fils;
+	is >> cols;
+	Matriz copia(fils,cols);
+	for (int i = 0; i < fils; i++)
+		for (int j = 0; j < cols; j++){
+			is >> dato;
+			copia.setPosition(i,j,dato);				
+		}
+	
+	m=copia;	
+	return is;
+}
 
 
 

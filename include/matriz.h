@@ -1,5 +1,6 @@
 #ifndef _MATRIZ_H
 #define _MATRIZ_H 
+#include <iostream>
 class Matriz{
 	private:
 		int* matriz;
@@ -13,6 +14,8 @@ class Matriz{
 		Matriz(int fils, int cols);
 		Matriz(const Matriz& m);
 		~Matriz();
+		friend std::ostream& operator<< (std::ostream& os, const Matriz& m);
+		friend std::istream& operator>> (std::istream& is, Matriz& m);
 		Matriz& operator=(const Matriz& m);
 		int getFils() const;
 		int getCols() const;

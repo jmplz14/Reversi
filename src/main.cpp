@@ -1,5 +1,6 @@
 #include "tablero.h"
 #include "jugador.h"
+#include "matriz.h"
 #include <iostream>
 #include <limits>
 using namespace std;
@@ -26,7 +27,7 @@ bool iniciarPartida(istream& is, ostream& os, Tablero& t,const Jugador& j1 , con
 	return parada;
 }
 void mostrarResultadosJugador(ostream& os, const Jugador& j){
-	os << j.getNombre() << ": " << j.getGanadas() << " ganadas que acumulan " << j.getPuntos() << endl ;
+	os << j.getNombre() << ": " << j.getGanadas() << " ganadas que acumulan " << j.getPuntos() << " puntos"<< endl ;
 }
 void obtenerResultadosPartida(ostream& os, const Tablero& t , Jugador& j1, Jugador& j2){
 	int ganador;
@@ -52,7 +53,8 @@ void resultadosFinales(ostream& os, Jugador& j1, Jugador& j2, int n_partidas){
 	cout << n_partidas - j1.getGanadas() - j2.getGanadas() << " empatadas" << endl;
 }
 int main(){
-	char n1[50], n2[50], nueva_partida;
+	int tamano=1024;
+	char n1[tamano], n2[tamano], nueva_partida;
 	int fil ,col, ganador, n_partidas = 0;
 	bool estado = true, parada;
 	cout << "Introduzca el numero de filas(4-10): ";
@@ -72,11 +74,13 @@ int main(){
 			Tablero t(fil,col);
 			cout << "Introduzca el nombre del jugador 1: ";
 			cin.ignore();
-			cin.getline(n1,numeric_limits<streamsize>::max());
+			cin.getline(n1,tamano,'\n');
 			if (cin){
-				Jugador j1(n1,1);
+				Jugador j1(n1,1);		
 				cout << "Introduzca el nombre del jugador 2: ";
-				cin.getline(n2,numeric_limits<streamsize>::max());
+				cin.getline(n2,tamano,'\n');
+				
+//				cin.getline(n2,numeric_limits<streamsize>::max());
 				if (cin){	
 					Jugador j2(n2,2);
 					do{
@@ -115,7 +119,7 @@ int main(){
 	}else {
 		cout << "Error al introducir los datos de la fila" << endl;
 	}
-
+	
 }
 	
 	

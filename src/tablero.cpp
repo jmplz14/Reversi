@@ -333,9 +333,30 @@ void Tablero::escribir(std::ostream& os) const{
 		os << std::endl;
 			
 }
+std::ostream& operator<< (std::ostream& os, const Tablero& t){
 
+	os << t.matriz;	
+	os << t.turnoActual() << " " << t.finalizado << std::endl;
+	
+	return os;
+	
+}
 
-
+std::istream& operator>> (std::istream& is, Tablero& t){
+	//Matriz copia;
+	int turno;
+	is >> t.matriz;
+	//t.matriz=copia;	
+	is >> turno;
+	if (turno = 1){
+		t.turno_J1 = true;
+	}else{
+		t.turno_J1 = false;
+	}
+	is >> t.finalizado;
+	
+	return is;
+}
 
 
 
