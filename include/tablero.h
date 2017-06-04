@@ -6,9 +6,9 @@ class Tablero{
 	private:
 		Matriz matriz;
 		bool finalizado;
-		bool turno_J1;
+		bool turno_J1, turno_inicio_J1;
 		int n_fichas, n_fichas_colocadas;
-	
+		
 		int transformarCharCol( char col) const;
 		bool comprobarLineas(int fil , int col , int ficha) const;
 		void cambiarFichas(int fil , int i_fils, int col , int i_cols, int ficha );

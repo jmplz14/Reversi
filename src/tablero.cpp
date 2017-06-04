@@ -29,22 +29,26 @@ void Tablero::vaciarTablero(){
 	matriz.setPosition( fils_centro + 1, cols_centro + 1, 2);
 	
 	n_fichas_colocadas = 4;
-	turno_J1 = true;
+	turno_J1 = turno_inicio_J1 == true ? false : true ;
+	turno_inicio_J1 = turno_J1;
 	finalizado = false;
 }
 
 Tablero::Tablero():matriz(8,8){
 	int n = 8;
+	turno_inicio_J1 = false;
 	n_fichas = n * n;
 	vaciarTablero();
 }
 
 Tablero::Tablero(int n):matriz(n,n){
+	turno_inicio_J1 = false;
 	n_fichas = n * n;
 	vaciarTablero();
 }
 
 Tablero::Tablero(int fils, int cols):matriz(fils,cols){
+	turno_inicio_J1 = false;
 	n_fichas = fils * cols;
 	vaciarTablero();
 }
@@ -348,12 +352,24 @@ std::istream& operator>> (std::istream& is, Tablero& t){
 	is >> t.matriz;
 	//t.matriz=copia;	
 	is >> turno;
+	int fils = t.matriz.getFils() , cols = t.matriz.getCols();
+	assert (fils >=4 && cols >=4);
 	if (turno = 1){
 		t.turno_J1 = true;
 	}else{
 		t.turno_J1 = false;
 	}
 	is >> t.finalizado;
+	t.n_fichas_colocadas = 0;
+	t.n_fichas=fils * cols;
+	for(int i = 0 ; i < fils ; i++){
+		for (int j = 0 ; j < cols; j++){
+			t.n_fichas_colocadas = t.matriz.getPosition(i,j) != 0 ? t.n_fichas_colocadas + 1 : t.n_fichas_colocadas ; 
+		}
+			
+	}
+	t.turno_inicio_J1 = t.turno_J1 ? false : true;
+	std::cout << t.n_fichas_colocadas << std::endl;
 	
 	return is;
 }

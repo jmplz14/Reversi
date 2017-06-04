@@ -114,7 +114,6 @@ void resultadosFinales(ostream& os, Jugador& j1, Jugador& j2, int n_partidas){
 	cout << n_partidas - j1.getGanadas() - j2.getGanadas() << " empatadas" << endl;
 }
 int main(int argc, char* argv[]){
-	
 	int const tamano=1024;
 	char n1[tamano], n2[tamano], nueva_partida, guardar;
 	int fil ,col, ganador, n_partidas = 0;
@@ -175,9 +174,11 @@ int main(int argc, char* argv[]){
 					//Se deja que se muestren los resultados aunque se paren o se muestren
 					//para ver como iva la partida
 					resultadosFinales(cout,j1, j2, n_partidas);
-					guardar = dialogoSalvar(cin,cout);
-					if (guardar == 's'){
-							salvar(cin,cout,t,j1,j2,n_partidas);
+					if (!parada){
+						guardar = dialogoSalvar(cin,cout);
+						if (guardar == 's'){
+								salvar(cin,cout,t,j1,j2,n_partidas);
+						}
 					}
 					
 				}else{
