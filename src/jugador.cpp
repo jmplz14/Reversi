@@ -191,9 +191,7 @@ std::istream& operator>> (std::istream& is, Jugador& j){
 	}
 	if(inicio == '!'){
 		is.getline(nombre,1024,'\n');
-		std::cout << nombre << std::endl;
 		is >> turno;
-		std::cout << turno << std::endl;
 		
 		Jugador jugador(nombre,turno);		
 		is >> ganadas;

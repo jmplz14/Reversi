@@ -4,12 +4,24 @@
 #include <iostream>
 #include <fstream>
 #include <limits>
+#include <cstring>
 using namespace std;
+char const cabecera[22] = "#MP-SUPER-REVERSI-1.0" ;
 void limpiarCin(std::istream& is){
 	is.clear();
 	is.ignore(numeric_limits<streamsize>::max(),'\n');
 }
-
+char dialogoSalvar(istream& is, ostream& os){
+	char guardar;
+	os << endl << "¿Quiere guardar la partida (s o n)? ";
+	is >> guardar; 
+	while ( (guardar != 's' && guardar != 'n') || !is){
+		limpiarCin(is);							
+		os << "Error introduzca s o n: ";
+		is >> guardar;
+	}
+	return guardar;
+}
 
 void salvar(istream& is, ostream& os, const Tablero& t, const Jugador& j1, const Jugador& j2, int n_partidas ){
 	const int tamano=255;
@@ -25,16 +37,38 @@ void salvar(istream& is, ostream& os, const Tablero& t, const Jugador& j1, const
 		cin.getline(fichero, tamano , '\n');
 		f.open(fichero);
 	}
-	f << "#MP-SUPER-REVERSI-1.0" << std::endl;
+	f << cabecera << std::endl;
 	f << t << std::endl;
 	f << j1 << std::endl;
 	f << j2 << std::endl;
-	f << n_partidas - j1.getGanadas() - j2.getGanadas();
+	f << n_partidas << std::endl;
+	
+}
+bool cargar(Tablero& t, Jugador& j1, Jugador& j2, char fichero[], int& partidas ){
+	bool estado = true;
+	int const tamano=1024;
+	char cabecera_f[tamano];
+	
+	ifstream f(fichero);
+	if (f){
+		f.getline(cabecera_f, tamano , '\n');
+		if(strcmp(cabecera_f, cabecera) == 0){
+			f >> t;
+			f >> j1;
+			f >> j2;
+			f >> partidas;
+		}else{
+			estado = false;
+		}
+		f.close();
+	}else{
+		estado=false;
+	}
 	
 }
 
-
 bool iniciarPartida(istream& is, ostream& os, Tablero& t,const Jugador& j1 , const Jugador& j2){
+	
 	bool parada=false;
 	t.escribir(cout);	
 	while(!parada && !t.estadoTablero()){
@@ -79,11 +113,13 @@ void resultadosFinales(ostream& os, Jugador& j1, Jugador& j2, int n_partidas){
 	mostrarResultadosJugador(os,j2);
 	cout << n_partidas - j1.getGanadas() - j2.getGanadas() << " empatadas" << endl;
 }
-int main(){
-	int tamano=1024;
+int main(int argc, char* argv[]){
+	
+	int const tamano=1024;
 	char n1[tamano], n2[tamano], nueva_partida, guardar;
 	int fil ,col, ganador, n_partidas = 0;
 	bool estado = true, parada;
+	cout << n_partidas;
 	cout << "Introduzca el numero de filas(4-10): ";
 	cin >> fil;
 	while( (fil > 10 || fil < 4 ) && cin){
@@ -120,22 +156,16 @@ int main(){
 							n_partidas++;
 							cout << "Introduzca una s para volver a jugar o una n para terminar y ver los resultados: ";
 							cin >> nueva_partida;
-							while ( nueva_partida != 's' && nueva_partida != 'n' && !cin){
+							while ( (nueva_partida != 's' && nueva_partida != 'n') || !cin){
 								limpiarCin(cin);							
 								cout << "Error introduzca s o n: ";
 								cin >> nueva_partida;
 							}
 						}else{
-							cout << endl << "¿Quiere guardar la partida (s o n)? ";
-							cin >> guardar; 
-							while ( (guardar != 's' && guardar != 'n') || !cin){
-								limpiarCin(cin);							
-								cout << "Error introduzca s o n: ";
-								cin >> guardar;
-							}
+							guardar = dialogoSalvar(cin,cout);
 							if (guardar == 's'){
 								salvar(cin,cout,t,j1,j2,n_partidas);
-							}
+							}						
 							
 						
 						}
@@ -145,7 +175,10 @@ int main(){
 					//Se deja que se muestren los resultados aunque se paren o se muestren
 					//para ver como iva la partida
 					resultadosFinales(cout,j1, j2, n_partidas);
-				
+					guardar = dialogoSalvar(cin,cout);
+					if (guardar == 's'){
+							salvar(cin,cout,t,j1,j2,n_partidas);
+					}
 					
 				}else{
 					cout << "Error al introducir los datos del jugador2;" << endl;
