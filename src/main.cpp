@@ -65,6 +65,8 @@ bool cargar(Tablero& t, Jugador& j1, Jugador& j2, char fichero[], int& partidas 
 		estado=false;
 	}
 	
+	return estado;
+	
 }
 
 bool iniciarPartida(istream& is, ostream& os, Tablero& t,const Jugador& j1 , const Jugador& j2){
@@ -113,90 +115,131 @@ void resultadosFinales(ostream& os, Jugador& j1, Jugador& j2, int n_partidas){
 	mostrarResultadosJugador(os,j2);
 	cout << n_partidas - j1.getGanadas() - j2.getGanadas() << " empatadas" << endl;
 }
+void partida(istream& is, ostream& os ,Tablero& t, Jugador& j1, Jugador& j2, int n_partidas = 0 ){
+	bool parada; 
+	char guardar, nueva_partida;
+	do{
+	
+			parada = iniciarPartida(is,os,t,j1,j2);
+
+			os << "Fin de la partida: ";
+			if (!parada){
+
+				obtenerResultadosPartida(cout,t,j1,j2);
+				n_partidas++;
+				os << "Introduzca una s para volver a jugar o una n para terminar y ver los resultados: ";
+				is >> nueva_partida;
+
+				while ( (nueva_partida != 's' && nueva_partida != 'n') || !is){
+					limpiarCin(is);							
+					os << "Error introduzca s o n: ";
+					is >> nueva_partida;
+				}
+
+			}else{
+
+				guardar = dialogoSalvar(is,os);
+				if (guardar == 's'){
+					salvar(is,os,t,j1,j2,n_partidas);
+				}						
+
+
+		}
+		t.vaciarTablero();
+
+		}while(!parada && nueva_partida == 's');
+			//Se deja que se muestren los resultados aunque se paren o se muestren
+			//para ver como iva la partida
+			resultadosFinales(cout,j1, j2, n_partidas);
+			if (!parada){
+				guardar = dialogoSalvar(is,os);
+				if (guardar == 's'){
+					salvar(is,os,t,j1,j2,n_partidas);
+				}
+			}
+
+}
 int main(int argc, char* argv[]){
 	int const tamano=1024;
 	char n1[tamano], n2[tamano], nueva_partida, guardar;
 	int fil ,col, ganador, n_partidas = 0;
-	bool estado = true, parada;
-	cout << n_partidas;
-	cout << "Introduzca el numero de filas(4-10): ";
-	cin >> fil;
-	while( (fil > 10 || fil < 4 ) && cin){
-		cout << "Introduzca el numero de filas(4-10) correctas: ";
+	bool estado = false, parada, cargar_partida = false;
+	if(argc == 1){
+		cout << "Introduzca el numero de filas(4-10): ";
 		cin >> fil;
-	}
-	if (cin){
-		cout << "Introduzca el numero de columnas(4-10): ";
-		cin >> col;
-		while((col > 10 || col < 4) && cin){
-			cout << "Introduzca el numero de columnas(4-10) correctas: ";
-			cin >> col;
+		while( (fil > 10 || fil < 4 ) && cin){
+			cout << "Introduzca el numero de filas(4-10) correctas: ";
+			cin >> fil;
 		}
+
 		if (cin){
-			Tablero t(fil,col);
-			cout << "Introduzca el nombre del jugador 1: ";
-			cin.ignore();
-			cin.getline(n1,tamano,'\n');
-			if (cin){
-				Jugador j1(n1,1);		
-				cout << "Introduzca el nombre del jugador 2: ";
-				cin.getline(n2,tamano,'\n');
-				
-//				cin.getline(n2,numeric_limits<streamsize>::max());
-				if (cin){	
-					Jugador j2(n2,2);
-					do{
-						
-						parada = iniciarPartida(cin,cout,t,j1,j2);
-						
-						cout << "Fin de la partida: ";
-						if (!parada){
-							obtenerResultadosPartida(cout,t,j1,j2);
-							n_partidas++;
-							cout << "Introduzca una s para volver a jugar o una n para terminar y ver los resultados: ";
-							cin >> nueva_partida;
-							while ( (nueva_partida != 's' && nueva_partida != 'n') || !cin){
-								limpiarCin(cin);							
-								cout << "Error introduzca s o n: ";
-								cin >> nueva_partida;
-							}
-						}else{
-							guardar = dialogoSalvar(cin,cout);
-							if (guardar == 's'){
-								salvar(cin,cout,t,j1,j2,n_partidas);
-							}						
-							
-						
-						}
-						t.vaciarTablero();
-									
-					}while(!parada && nueva_partida == 's');
-					//Se deja que se muestren los resultados aunque se paren o se muestren
-					//para ver como iva la partida
-					resultadosFinales(cout,j1, j2, n_partidas);
-					if (!parada){
-						guardar = dialogoSalvar(cin,cout);
-						if (guardar == 's'){
-								salvar(cin,cout,t,j1,j2,n_partidas);
-						}
-					}
-					
-				}else{
-					cout << "Error al introducir los datos del jugador2;" << endl;
-				}
-			
-			}else{
-				cout << "Error al introducir los datos del jugador 1" << endl;
+
+			cout << "Introduzca el numero de columnas(4-10): ";
+			cin >> col;
+			while((col > 10 || col < 4) && cin){
+				cout << "Introduzca el numero de columnas(4-10) correctas: ";
+				cin >> col;
 			}
 
-		}else{
-			cout << "Error al introducir los datos de la columna" << endl;			
+			if (cin){
+
+				cout << "Introduzca el nombre del jugador 1: ";
+				cin.ignore();
+				cin.getline(n1,tamano,'\n');
+
+				if (cin){
+
+					cout << "Introduzca el nombre del jugador 2: ";
+					cin.getline(n2,tamano,'\n');
+
+	//				cin.getline(n2,numeric_limits<streamsize>::max());
+
+					if (cin){	
+
+						estado = true;
+					}else{
+						cout << "Error al introducir los datos del jugador2;" << endl;
+					}
+
+				}else{
+					cout << "Error al introducir los datos del jugador 1" << endl;
+				}
+
+			}else{
+				cout << "Error al introducir los datos de la columna" << endl;			
+			}
+		}else {
+			cout << "Error al introducir los datos de la fila" << endl;
 		}
-	}else {
-		cout << "Error al introducir los datos de la fila" << endl;
+		
+	}else if (argc == 2) {
+			cargar_partida = true ;
+	}else{
+		cout << "Demasiados argumentos " << endl;
 	}
 	
-}
+	
+	if (estado){
+		Tablero t(fil,col);
+		Jugador j2(n2,2);
+		Jugador j1(n1,1);				
+		partida(cin,cout,t,j1,j2);	
+	}
+	if (cargar_partida){
+		bool cargada;
+		int partidas = 0;
+		Tablero t;
+		Jugador j2("j2");
+		Jugador j1("j1");				
+		cargada=cargar(t,j1,j2,argv[1],partidas );
+		if(cargada){
+			partida(cin,cout,t,j1,j2,partidas);
+		}else{
+			cout << "No se pudo cargar la partida" << endl;
+		}
+	}
+}	
+				
 	
 	
 	
